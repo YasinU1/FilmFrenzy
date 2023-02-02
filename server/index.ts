@@ -137,3 +137,48 @@ app.post('/login', (req: Request, res: Response) => {
 
   // [{"id":1,"name":"Maria Doe","email":"maria6@example.com","password":"maria123"}]
   // [{"_id":"1","name":"Olivia McAndrew","email":"olivia@example.com","password":"liv123"}]
+
+
+
+// Generate a new id using a library like uuid
+import crypto from 'crypto';
+
+const newId = crypto.randomBytes(12).toString('hex');
+
+const raw = JSON.stringify({
+  "dataSource": "Cluster0",
+  "database": "Films",
+  "collection": "customers",
+  "document": {
+    "_id": {
+      "$oid": newId
+    },
+    "fname": "Test 1",
+    "sname": "T",
+    "DOB": "222222",
+    "email": "john@example.com",
+    "username": "livmcandrew",
+    "password": "password"
+  }
+});
+
+const requestOptionsAddCustomers: RequestInit = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+
+
+  app.get('/addusers', (req, res) => {
+    fetch("https://data.mongodb-api.com/app/data-afuuc/endpoint/data/v1/action/insertOne", requestOptionsAddCustomers)
+    .then(res => res.json())
+        .then(data => {
+            res.json(data)
+        })
+        .catch(error => {
+            console.log('error', error);
+            res.status(500).send('Error: ' + error);
+        });
+  });
